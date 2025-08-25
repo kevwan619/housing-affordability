@@ -1,3 +1,9 @@
-notebooks/config.py
+**/config.py
 
 learn_pandas.ipynb
+
+**/.ipynb_checkpoints/
+
+**/__pycache__/
+
+*.pyc
