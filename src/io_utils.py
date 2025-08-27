@@ -1,19 +1,29 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from census import Census # delete this later maybe?
+import pandas as pd
 
 # loads pairs from .env into session environment variables
 load_dotenv()
 
+CENSUS_API_KEY = os.getenv("CENSUS_API_KEY")
+
 # saves project_root from .env as a path object
 PROJECT_ROOT = Path(os.getenv("PROJECT_ROOT"))
 
-DATA_RAW = PROJECT_ROOT / "data_raw"
-
+# DATA_RAW = PROJECT_ROOT / "data_raw"
 
 
 '''
-c = Census(CENSUS_API_KEY)
+rent_to_income_raw = c.acs1.get(
+    variables,
+    {'for': 'metropolitan statistical area/micropolitan statistical area:*'},
+    year=2023
+)
+'''
+
+# eventually this goes into notebook: REMOVE BELOW
 variables = (
     "NAME",
     "B25070_001E",  # Total
@@ -28,16 +38,40 @@ variables = (
     "B25070_010E",  # 50.0 or more
     "B25070_011E"   # Not computed
 )
+geography = "metropolitan statistical area/micropolitan statistical area:*"
+c = Census(CENSUS_API_KEY)
+# REMOVE ABOVE
 
-rent_to_income_raw = c.acs1.get(
-    variables,
-    {'for': 'metropolitan statistical area/micropolitan statistical area:*'},
-    year=2023
-)
+def fetch_census_table(var_table, geo, year):
+
+	file_path = PROJECT_ROOT / "data_raw" / f"B25070_{year}.csv"
+	print(file_path)
+
+	if file_path.exists():
+		print("file exists")
+	else: # fetch census data and save
+		data = c.acs1.get(var_table, {'for': geo}, year)
+		df = pd.DataFrame(data)
+		print(df.head())
+		df.to_csv(file_path)
+
+		
+
+
+fetch_census_table(variables, geography, 2016)
+
+
 '''
+NEXT STEPS:
 
-def fetch_census_table(year):
+write function for fetch_census_table
+check if file exists first:
+	/data_raw/B25070_(year).csv
+if it does exist, then nothing needs to be done, print something
+if it does not exist, then execute the fetch
+in the main notebook file, run fetch_census_table for each year
 
-
-# what i need:
-# 1. 
+for example:
+for years 2015 - 2023:
+	fetch_census_table(year)
+'''
