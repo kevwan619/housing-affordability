@@ -56,6 +56,8 @@ def fetch_census_table(var_table, geo, year):
 		df.to_csv(file_path)
 
 		
+def test_function():
+	print("test function!")
 
 
 fetch_census_table(variables, geography, 2016)
