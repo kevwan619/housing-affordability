@@ -1,7 +1,5 @@
-import os
-from dotenv import load_dotenv
-from pathlib import Path
 from census import Census # delete this later maybe?
+from pathlib import Path
 import pandas as pd
 
 
@@ -26,7 +24,7 @@ def fetch_census_table(
 
 
 
-def check_table(
+def load_local_csv(
 	file_path: Path
 ) -> pd.DataFrame:
 
